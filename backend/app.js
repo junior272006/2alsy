@@ -12,7 +12,10 @@ mongoose.connect(process.env.MONGO_URI)
 
 // CORS - TOUJOURS EN PREMIER
 app.use(cors({
-  origin: '*',
+  origin: [
+  'http://localhost:5173',
+  'https://2alsy.vercel.app'
+],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
