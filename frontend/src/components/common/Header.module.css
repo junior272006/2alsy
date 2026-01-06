@@ -1,0 +1,58 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  background-color: light-dark(var(--mantine-color-neutral-0), var(--mantine-color-dark-7));
+  border-bottom: 1px solid light-dark(var(--mantine-color-neutral-2), var(--mantine-color-dark-5));
+  padding: 0 32px;
+  z-index: 1000;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--mantine-radius-md);
+  text-decoration: none;
+  /* Correction pour la visibilité du texte en mode dark */
+  color: light-dark(var(--mantine-color-neutral-8), var(--mantine-color-dark-0));
+  transition: all 0.2s ease;
+  font-weight: 500;
+
+  &:hover {
+    background-color: var(--mantine-color-brandGreen-1);
+    color: var(--mantine-color-brandGreen-6);
+  }
+}
+
+/* Correction pour le drawer en mode dark */
+.drawerContent {
+  background-color: light-dark(var(--mantine-color-neutral-1), var(--mantine-color-dark-7));
+}
+
+.drawerHeader {
+  background-color: light-dark(var(--mantine-color-neutral-1), var(--mantine-color-dark-7));
+  border-bottom: 1px solid light-dark(var(--mantine-color-neutral-3), var(--mantine-color-dark-5));
+}
+
+.drawerBody {
+  background-color: light-dark(var(--mantine-color-neutral-1), var(--mantine-color-dark-7));
+}
+
+/* Style pour les liens dans le drawer mobile */
+.drawerLink {
+  display: block;
+  padding: 12px 16px;
+  border-radius: var(--mantine-radius-md);
+  text-decoration: none;
+  color: light-dark(var(--mantine-color-neutral-8), var(--mantine-color-dark-0));
+  transition: all 0.2s ease;
+  font-weight: 500;
+
+  &:hover {
+    background-color: light-dark(var(--mantine-color-brandGreen-1), var(--mantine-color-dark-6));
+    color: var(--mantine-color-brandGreen-6);
+  }
+}

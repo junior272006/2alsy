@@ -1,0 +1,79 @@
+/* ================= HERO ================= */
+
+.heroButtons {
+  display: flex;
+  gap: 12px;
+}
+
+/* 📱 Mobile */
+@media (max-width: 768px) {
+  .heroButtons {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .heroButtons button {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+/* ================= TEXT SIZES ================= */
+
+.heroTitle {
+  font-size: 2.2rem;
+  line-height: 1.2;
+}
+
+.heroText {
+  font-size: 1rem;
+}
+
+/* 📱 Mobile text adjustments */
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 1.6rem;
+  }
+
+  .heroText {
+    font-size: 0.95rem;
+  }
+}
+
+/* ================= CARDS ================= */
+
+.card {
+  padding: 1.25rem;
+}
+
+/* 📱 Mobile cards */
+@media (max-width: 768px) {
+  .card {
+    padding: 0.9rem;
+  }
+}
+
+/* ================= STATS ================= */
+
+.statValue {
+  font-size: 1.4rem;
+}
+
+@media (max-width: 768px) {
+  .statValue {
+    font-size: 1.1rem;
+  }
+}
+
+/* ================= CTA ================= */
+
+.ctaTitle {
+  font-size: 1.8rem;
+}
+
+@media (max-width: 768px) {
+  .ctaTitle {
+    font-size: 1.4rem;
+  }
+}

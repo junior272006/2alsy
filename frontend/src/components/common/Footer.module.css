@@ -1,0 +1,24 @@
+/* footer.module.css */
+
+/* On applique des styles généraux aux stacks et groupes du footer */
+.footerStack {
+  display: flex;
+  flex-direction: column;
+}
+
+.footerGroup {
+  justify-content: flex-start; /* par défaut à gauche */
+}
+
+/* MEDIA QUERY : pour mobile */
+@media (max-width: 768px) {
+  .footerStack {
+    align-items: center; /* centre horizontalement */
+    text-align: center;  /* centre le texte */
+  }
+
+  .footerGroup {
+    justify-content: center; /* centre les groupes (ex: icônes) */
+    gap: 10px;
+  }
+}
