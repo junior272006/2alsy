@@ -21,7 +21,7 @@ import {
   IconSchool,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
-import classes from "./home.module.css";
+import classes from "./Home.module.css";
 
 export default function Home() {
   const { colorScheme } = useMantineColorScheme();
