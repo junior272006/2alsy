@@ -1,52 +1,25 @@
 const User = require('../models/user');
-const bcrypt = require('bcrypt');
 
 exports.CreateUser = async (req, res) => {
   try {
-    // 1️⃣ Récupération des données
-    const {
-      firstname,
-      lastname,
-      email,
-      phone,
-      password,
-      promotion,
-      bio,
-      study,
-      job
-    } = req.body;
+    console.log('BODY REÇU:', req.body);
 
-    console.log('BODY :', req.body);
-    console.log('FILE :', req.file);
-
-    // 2️⃣ Hash du mot de passe
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // 3️⃣ Création utilisateur
     const user = new User({
-      firstname,
-      lastname,
-      email,
-      phone,
-      password: hashedPassword,
-      promotion,
-      bio,
-      study,
-      job,
-      avatar: req.file ? req.file.path : ''
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      phone: req.body.phone,
+      password: req.body.password,
     });
 
-    // 4️⃣ Sauvegarde MongoDB
-    await user.save();
-    console.log('✅ User sauvegardé:', user._id);
-    // 5️⃣ Réponse
-    res.status(201).json({
-      message: 'Inscription réussie',
-      user
-    });
+    const savedUser = await user.save();
 
-  } catch (error) {
-    console.log('ERREUR :', error);
-    res.status(400).json({ error: error.message });
+    console.log('USER SAUVÉ:', savedUser);
+
+    res.status(201).json({ message: 'OK', user: savedUser });
+
+  } catch (err) {
+    console.error('❌ ERREUR MONGO:', err);
+    res.status(500).json({ error: err.message });
   }
 };
