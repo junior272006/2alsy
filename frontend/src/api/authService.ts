@@ -13,17 +13,36 @@ export interface UserData {
     avatar: File | null;
 }
 
+export interface LoginData {
+    email: string;
+    password: string;
+}
+
+export interface User {
+    id: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+    phone: string;
+    promotion: string;
+    bio: string;
+    study: string;
+    job: string;
+    avatar?: string;
+}
+
 export interface ApiResponse {
     message?: string;
     error?: string;
     token?: string;
-    user?: any;
-    admin?: any;
+    user?: User;
+    admin?: User;
     id?: string;
     email?: string;
     product?: string;
 }
 
+//--------------CREATION USER----------------------
 export const registerUser = async (userData: UserData): Promise<ApiResponse> => {
     try {
         const formData = new FormData();
@@ -42,9 +61,7 @@ export const registerUser = async (userData: UserData): Promise<ApiResponse> => 
             formData.append('avatar', userData.avatar);
         }
 
-        // LOG pour déboguer
         console.log(' Envoi vers:', `${API_URL}/user/signup`);
-        console.log(' FormData:', Array.from(formData.entries()));
 
         const response = await fetch(`${API_URL}/user/signup`, {
             method: 'POST',
@@ -55,18 +72,57 @@ export const registerUser = async (userData: UserData): Promise<ApiResponse> => 
         console.log(' Réponse:', data);
 
         if (!response.ok) {
-            throw new Error(data.error || 'Erreur lors de l\'inscription');
+            throw new Error(data.error || data.message || 'Erreur lors de l\'inscription');
         }
 
         return data;
 
-    } catch (error) {
-        console.error(' Erreur:', error);
+    } catch (error: any) {
+        console.error(' Erreur registerUser:', error);
+        throw error; //  Uniformisé avec loginUser
+    }
+};
+
+//---------CONNEXION USER--------------------
+export const loginUser = async (loginData: LoginData): Promise<ApiResponse> => {
+    try {
+        const response = await fetch(`${API_URL}/user/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(loginData)
+        });
+
+        const data: ApiResponse = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'Erreur lors de la connexion');
+        }
+
+        // Stocker le token si présent
+        if (data.token) {
+            localStorage.setItem('authToken', data.token);
+        }
+
+        return data;
+
+    } catch (error: any) {
+        console.error(' Erreur loginUser:', error);
         
-        if (error instanceof Error) {
-            return { error: error.message };
+        // Gestion erreur réseau
+        if (error.message === 'Failed to fetch') {
+            throw new Error('Impossible de contacter le serveur');
         }
         
-        return { error: 'Une erreur inattendue s\'est produite' };
+        throw error;
     }
+};
+
+//---------DECONNEXION USER--------------------
+export const logoutUser = (): void => {
+    localStorage.removeItem('authToken');
+};
+
+//---------RECUPERER TOKEN--------------------
+export const getAuthToken = (): string | null => {
+    return localStorage.getItem('authToken');
 };

@@ -8,7 +8,7 @@ router.post(
   upload.single('avatar'), // TOUJOURS AVANT le controller
   Ctrl.CreateUser
 );
-
+router.post('/login',Ctrl.LoginUser)
 
 
 module.exports = router;
