@@ -18,11 +18,10 @@ exports.CreateUser = async (req, res) => {
       job
     } = req.body;
 
-    if (!password) {
-      return res.status(400).json({ error: 'Mot de passe manquant' });
-    }
-
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Récupérer l'avatar si présent
+    const avatar = req.file ? [req.file.path] : [];
 
     const user = new User({
       firstname,
@@ -34,23 +33,17 @@ exports.CreateUser = async (req, res) => {
       bio,
       study,
       job,
-      avatar: req.file ? req.file.path : null,
+      avatar
     });
 
     await user.save();
 
     res.status(201).json({
       message: 'Utilisateur créé',
-      user: {
-        id: user._id,
-        firstname: user.firstname,
-        email: user.email,
-        avatar: user.avatar,
-      },
     });
 
   } catch (err) {
-    console.error('❌ ERREUR:', err);
+    console.error('ERREUR:', err);
     res.status(500).json({ error: err.message });
   }
 };

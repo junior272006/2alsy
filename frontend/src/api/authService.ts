@@ -32,7 +32,7 @@ export const registerUser = async (userData: UserData): Promise<ApiResponse> => 
         formData.append('lastname', userData.lastname);
         formData.append('email', userData.email);
         formData.append('phone', userData.phone);
-       formData.append('password', userData.password);
+        formData.append('password', userData.password);
         formData.append('promotion', userData.promotion);
         formData.append('bio', userData.bio);
         formData.append('study', userData.study);
@@ -43,8 +43,8 @@ export const registerUser = async (userData: UserData): Promise<ApiResponse> => 
         }
 
         // LOG pour déboguer
-        console.log('📤 Envoi vers:', `${API_URL}/user/signup`);
-        console.log('📦 FormData:', Array.from(formData.entries()));
+        console.log(' Envoi vers:', `${API_URL}/user/signup`);
+        console.log(' FormData:', Array.from(formData.entries()));
 
         const response = await fetch(`${API_URL}/user/signup`, {
             method: 'POST',
@@ -52,7 +52,7 @@ export const registerUser = async (userData: UserData): Promise<ApiResponse> => 
         });
 
         const data: ApiResponse = await response.json();
-        console.log('📥 Réponse:', data);
+        console.log(' Réponse:', data);
 
         if (!response.ok) {
             throw new Error(data.error || 'Erreur lors de l\'inscription');
@@ -61,7 +61,7 @@ export const registerUser = async (userData: UserData): Promise<ApiResponse> => 
         return data;
 
     } catch (error) {
-        console.error('❌ Erreur:', error);
+        console.error(' Erreur:', error);
         
         if (error instanceof Error) {
             return { error: error.message };

@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  phone: { type: String, required: true },
+  phone: String,
   password: { type: String, required: true },
-  promotion: { type: String },
-  bio: { type: String },
-  study: { type: String },
-  job: { type: String },
-  avatar: { type: String,required:false }, // Cloudinary URL
+  promotion: String,
+  bio: String,
+  study: String,
+  job: String,
+  avatar: [String]
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

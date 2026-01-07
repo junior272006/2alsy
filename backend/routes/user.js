@@ -10,13 +10,5 @@ router.post(
 );
 
 
-router.post('/test-upload', upload.single('avatar'), (req, res) => {
-  console.log('Body:', req.body);
-  console.log('File:', req.file);
-  res.json({ 
-    body: req.body, 
-    file: req.file ? 'File received' : 'No file' 
-  });
-});
 
 module.exports = router;
