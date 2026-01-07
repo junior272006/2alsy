@@ -38,7 +38,7 @@ exports.CreateUser = async (req, res) => {
 
     // 4️⃣ Sauvegarde MongoDB
     await user.save();
-
+    console.log('✅ User sauvegardé:', user._id);
     // 5️⃣ Réponse
     res.status(201).json({
       message: 'Inscription réussie',

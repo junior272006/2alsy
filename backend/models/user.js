@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
   bio: { type: String },
   study: { type: String },
   job: { type: String },
-  avatar: { type: String }, // Cloudinary URL
+  avatar: { type: String,required:false }, // Cloudinary URL
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
