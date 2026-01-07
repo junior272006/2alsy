@@ -54,12 +54,6 @@ exports.CreateUser = async (req, res) => {
 
     res.status(201).json({
       message: 'Utilisateur créé',
-      user: {
-        id: user._id,
-        firstname: user.firstname,
-        email: user.email,
-        avatar: user.avatar,
-      },
     });
 
   } catch (err) {
