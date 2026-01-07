@@ -1,58 +1,52 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 
-exports.CreateUser = async (req, res, next) => {
+exports.CreateUser = async (req, res) => {
   try {
-    const { firstname, lastname, password, promotion, bio, study, job, email, phone } = req.body;
-    
-    console.log('Données:', req.body);
-    console.log('Fichier uploadé:', req.file);
-    
-    // Vérifier que tous les champs requis sont présents
-    if (!firstname || !lastname || !password || !email || !phone) {
-      return res.status(400).json({ 
-        error: 'Tous les champs obligatoires doivent être remplis' 
-      });
-    }
+    // 1️⃣ Récupération des données
+    const {
+      firstname,
+      lastname,
+      email,
+      phone,
+      password,
+      promotion,
+      bio,
+      study,
+      job
+    } = req.body;
 
-    // Hasher le mot de passe
-    const hash = await bcrypt.hash(password, 10);
+    console.log('BODY :', req.body);
+    console.log('FILE :', req.file);
 
-    // Créer l'utilisateur avec l'URL de l'avatar depuis Cloudinary
+    // 2️⃣ Hash du mot de passe
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 3️⃣ Création utilisateur
     const user = new User({
       firstname,
       lastname,
-      password: hash,
-      avatar: req.file ? req.file.path : null, // URL Cloudinary
+      email,
+      phone,
+      password: hashedPassword,
       promotion,
       bio,
       study,
       job,
-      email,
-      phone,
+      avatar: req.file ? req.file.path : ''
     });
 
+    // 4️⃣ Sauvegarde MongoDB
     await user.save();
-    
-    res.status(201).json({ 
-      message: 'Utilisateur créé avec succès',
-      user: {
-        id: user._id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        avatar: user.avatar,
-        email: user.email
-      }
+
+    // 5️⃣ Réponse
+    res.status(201).json({
+      message: 'Inscription réussie',
+      user
     });
 
   } catch (error) {
-    console.error('Erreur:', error);
-    
-    // Gestion des erreurs spécifiques
-    if (error.code === 11000) {
-      return res.status(400).json({ error: "Cet email existe déjà" });
-    }
-    
+    console.log('ERREUR :', error);
     res.status(400).json({ error: error.message });
   }
 };
