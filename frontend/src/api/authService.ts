@@ -32,7 +32,7 @@ export const registerUser = async (userData: UserData): Promise<ApiResponse> => 
         formData.append('lastname', userData.lastname);
         formData.append('email', userData.email);
         formData.append('phone', userData.phone);
-        formData.append('password', userData.password);
+       formData.append('password', userData.password);
         formData.append('promotion', userData.promotion);
         formData.append('bio', userData.bio);
         formData.append('study', userData.study);
