@@ -10,13 +10,12 @@ if (process.env.JWT_SECRET) {
   console.log('🔑 Longueur:', process.env.JWT_SECRET.length, 'caractères');
 }
 
-
 const app = express();
 
 // Connexion MongoDB
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log(" Connexion à MongoDB réussie !"))
-  .catch((err) => console.error(" Connexion à MongoDB échouée !", err));
+  .then(() => console.log("✅ Connexion à MongoDB réussie !"))
+  .catch((err) => console.error("❌ Connexion à MongoDB échouée !", err));
 
 // CORS
 app.use(cors({
@@ -36,11 +35,12 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
     message: 'Server is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    jwtConfigured: !!process.env.JWT_SECRET  // ✅ Ajoute ça
   });
 });
 
-// Routes (SANS les middlewares json/urlencoded avant)
+// Routes
 app.use('/api/user', userRoute);
 
 module.exports = app;
