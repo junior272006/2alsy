@@ -4,6 +4,13 @@ const mongoose = require('mongoose');
 const userRoute = require('./routes/user');
 require('dotenv').config();
 
+// 🔍 DEBUG - Vérifie le JWT_SECRET au démarrage
+console.log('🔑 JWT_SECRET chargé:', process.env.JWT_SECRET ? '✅ OUI' : '❌ NON');
+if (process.env.JWT_SECRET) {
+  console.log('🔑 Longueur:', process.env.JWT_SECRET.length, 'caractères');
+}
+
+
 const app = express();
 
 // Connexion MongoDB
