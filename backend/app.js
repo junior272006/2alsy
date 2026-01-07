@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const userRoute = require('./routes/user');
 require('dotenv').config();
 
 const app = express();
@@ -10,19 +11,15 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log(" Connexion à MongoDB réussie !"))
   .catch((err) => console.error(" Connexion à MongoDB échouée !", err));
 
-// CORS - TOUJOURS EN PREMIER
+// CORS
 app.use(cors({
   origin: [
-  'http://localhost:5173',
-  'https://2alsy.vercel.app'
-],
+    'http://localhost:5173',
+    'https://2alsy.vercel.app'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
-// Middlewares json/urlencoded EN PREMIER (sauf pour les routes avec Multer)
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -33,9 +30,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Imports des routes
-
-// Routes
-
+// Routes (SANS les middlewares json/urlencoded avant)
+app.use('/api/user', userRoute);
 
 module.exports = app;

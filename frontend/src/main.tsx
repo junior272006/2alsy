@@ -5,6 +5,7 @@ import { MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css';
 import { theme } from './styles/theme.ts';
 import Home from './pages/public/Home.tsx';
+import Signup from './pages/public/Register.tsx';
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
@@ -14,6 +15,7 @@ createRoot(document.getElementById('root')!).render(
       <Routes>
    <Route path='/app' element={< App/>} />
    <Route path='/' element={< Home/>} />
+    <Route path='/signup' element={< Signup/>} />
     </Routes>
     </BrowserRouter>
      </MantineProvider>
