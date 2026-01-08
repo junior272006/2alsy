@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   TextInput,
   PasswordInput,
@@ -18,7 +19,9 @@ import {
 import { IconLock, IconMail, IconAlertCircle } from '@tabler/icons-react';
 import { loginUser } from '../../api/authService';
 import type { LoginData } from '../../api/authService';
+
 export default function Login() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginData>({
     email: '',
     password: '',
@@ -48,8 +51,8 @@ export default function Login() {
       const response = await loginUser(formData);
       console.log('✅ Connexion réussie:', response);
       
-      // Redirection après succès
-      // window.location.href = '/dashboard';
+      // ✅ Redirection vers l'accueil
+      navigate('/');
       
     } catch (err: any) {
       setError(err.message || 'Erreur lors de la connexion');
@@ -134,7 +137,7 @@ export default function Login() {
 
       <Text c="dimmed" size="sm" ta="center" mt="md">
         Vous n'avez pas de compte ?{' '}
-        <Anchor size="sm" fw={600} c="brandGreen">
+        <Anchor size="sm" fw={600} c="brandGreen" onClick={() => navigate('/register')}>
           S'inscrire
         </Anchor>
       </Text>
