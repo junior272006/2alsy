@@ -16,6 +16,7 @@ import {
   Center,
   ThemeIcon,
 } from '@mantine/core';
+import { Link } from 'react-router-dom';
 import { IconLock, IconMail, IconAlertCircle } from '@tabler/icons-react';
 import { loginUser } from '../../api/authService';
 import type { LoginData } from '../../api/authService';
@@ -49,9 +50,9 @@ export default function Login() {
 
     try {
       const response = await loginUser(formData);
-      console.log('✅ Connexion réussie:', response);
+      console.log(' Connexion réussie:', response);
       
-      // ✅ Redirection vers l'accueil
+      //  Redirection vers l'accueil
       navigate('/');
       
     } catch (err: any) {
@@ -117,7 +118,7 @@ export default function Login() {
 
             <Group justify="space-between">
               <Checkbox label="Se souvenir de moi" />
-              <Anchor size="sm" c="brandBlue">
+              <Anchor size="sm" c="brandBlue" component={Link} to='/forgott'>
                 Mot de passe oublié ?
               </Anchor>
             </Group>

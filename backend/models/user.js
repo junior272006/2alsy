@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
   bio: String,
   study: String,
   job: String,
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
   avatar: [String]
 }, { timestamps: true });
 

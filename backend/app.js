@@ -2,20 +2,21 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoute = require('./routes/user');
+const authRoute= require('./routes/auth')
 require('dotenv').config();
 
 // 🔍 DEBUG - Vérifie le JWT_SECRET au démarrage
-console.log('🔑 JWT_SECRET chargé:', process.env.JWT_SECRET ? '✅ OUI' : '❌ NON');
+console.log(' JWT_SECRET chargé:', process.env.JWT_SECRET ? ' OUI' : ' NON');
 if (process.env.JWT_SECRET) {
-  console.log('🔑 Longueur:', process.env.JWT_SECRET.length, 'caractères');
+  console.log(' Longueur:', process.env.JWT_SECRET.length, 'caractères');
 }
 
 const app = express();
 
 // Connexion MongoDB
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ Connexion à MongoDB réussie !"))
-  .catch((err) => console.error("❌ Connexion à MongoDB échouée !", err));
+  .then(() => console.log(" Connexion à MongoDB réussie !"))
+  .catch((err) => console.error(" Connexion à MongoDB échouée !", err));
 
 // CORS
 app.use(cors({
@@ -42,5 +43,5 @@ app.get('/api/health', (req, res) => {
 
 // Routes
 app.use('/api/user', userRoute);
-
+app.use('/api/auth',authRoute)
 module.exports = app;

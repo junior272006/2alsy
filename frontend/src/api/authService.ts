@@ -126,3 +126,49 @@ export const logoutUser = (): void => {
 export const getAuthToken = (): string | null => {
     return localStorage.getItem('authToken');
 };
+
+//---------MOT DE PASSE OUBLIE-------------------
+export const forgotPassword = async (email: string): Promise<ApiResponse> => {
+    try {
+        const response = await fetch(`${API_URL}/auth/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        const data: ApiResponse = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'Erreur lors de la demande de réinitialisation');
+        }
+
+        return data;
+
+    } catch (error: any) {
+        console.error('Erreur forgotPassword:', error);
+        throw error;
+    }
+};
+
+//---------RESET MOT DE PASSE-------------------
+export const resetPassword = async (token: string, newPassword: string): Promise<ApiResponse> => {
+    try {
+        const response = await fetch(`${API_URL}/auth/reset-password/${token}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: newPassword })
+        });
+
+        const data: ApiResponse = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'Erreur lors de la réinitialisation du mot de passe');
+        }
+
+        return data;
+
+    } catch (error: any) {
+        console.error('Erreur resetPassword:', error);
+        throw error;
+    }
+};
