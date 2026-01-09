@@ -1,64 +1,63 @@
+const SibApiV3Sdk = require('sib-api-v3-sdk');
+const dotenv = require('dotenv');
+const User = require('../models/user'); // ton modèle
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-const User = require('../models/user');
-const transporter = require('../config/mailer');
 
-//  Envoyer email
-exports.forgotPassword = async (req, res) => {
+dotenv.config();
+
+// Config Brevo
+const client = SibApiV3Sdk.ApiClient.instance;
+client.authentications['api-key'].apiKey = process.env.BREVO_SMTP_PASS;
+const emailApi = new SibApiV3Sdk.TransactionalEmailsApi();
+
+// Forgot password
+async function forgotPassword(email) {
+  const user = await User.findOne({ email });
+  if (!user) return { success: true, message: 'Si cet email existe, un lien a été envoyé' };
+
+  const token = crypto.randomBytes(32).toString('hex');
+  user.resetPasswordToken = token;
+  user.resetPasswordExpires = Date.now() + 3600000; // 1h
+  await user.save();
+
+  const resetLink = `${process.env.CLIENT_URL}/reset?token=${token}`;
+
+  const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail({
+    to: [{ email }],
+    sender: { email: 'no-reply@twoalsy.com', name: 'TwoAlsy' },
+    subject: 'Réinitialisation de votre mot de passe',
+    htmlContent: `<p>Bonjour,</p>
+      <p>Cliquez sur ce lien pour réinitialiser votre mot de passe :</p>
+      <a href="${resetLink}">${resetLink}</a>
+      <p>Ce lien est valable 1 heure.</p>`,
+  });
+
   try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ error: "Email introuvable" });
-
-    const token = crypto.randomBytes(32).toString('hex');
-    user.resetPasswordToken = token;
-    user.resetPasswordExpire = Date.now() + 15 * 60 * 1000; // 15 min
-    await user.save();
-
-    const resetLink = `${process.env.CLIENT_URL}/reset-password/${token}`;
-
-    await transporter.sendMail({
-      from: '"Alumni Connect" <no-reply@alumni.com>',
-      to: user.email,
-      subject: 'Réinitialisation de mot de passe',
-      html: `
-        <p>Bonjour ${user.firstname},</p>
-        <p>Clique sur ce lien pour réinitialiser ton mot de passe :</p>
-        <a href="${resetLink}">${resetLink}</a>
-        <p>Ce lien expire dans 15 minutes.</p>
-      `,
-    });
-
-    res.json({ message: 'Email envoyé avec succès' });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erreur serveur' });
+    await emailApi.sendTransacEmail(sendSmtpEmail);
+    return { success: true, message: 'Si cet email existe, un lien a été envoyé' };
+  } catch (err) {
+    console.error('Erreur envoi email Brevo:', err);
+    return { success: false, message: 'Impossible d’envoyer l’email' };
   }
-};
+}
 
-//  Réinitialiser mot de passe
-exports.resetPassword = async (req, res) => {
-  try {
-    const { token } = req.params;
-    const { password } = req.body;
+// Reset password
+async function resetPassword(token, newPassword) {
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: Date.now() },
+  });
 
-    const user = await User.findOne({
-      resetPasswordToken: token,
-      resetPasswordExpire: { $gt: Date.now() },
-    });
+  if (!user) return { success: false, message: 'Token invalide ou expiré' };
 
-    if (!user) return res.status(400).json({ error: 'Token invalide ou expiré' });
+  const hashed = await bcrypt.hash(newPassword, 10);
+  user.password = hashed;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+  await user.save();
 
-    user.password = await bcrypt.hash(password, 10);
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+  return { success: true, message: 'Mot de passe réinitialisé avec succès' };
+}
 
-    await user.save();
-
-    res.json({ message: 'Mot de passe mis à jour avec succès' });
-
-  } catch (error) {
-    res.status(500).json({ error: 'Erreur serveur' });
-  }
-};
+module.exports = { forgotPassword, resetPassword };
